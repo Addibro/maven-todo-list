@@ -1,4 +1,2 @@
 #maven-todo-list
 
-### From http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/basic_app_embedded_tomcat/basic_app-tomcat-embedded.html
-
