@@ -1,9 +1,9 @@
 # maven-todo-list
 
-#### start mongodg:
+1. start mongodg:
 `mongod`
-#### deploy
+2. deploy
 `./deploy` (don't forget to chmod +ux deploy.sh)
-
+3. goto localhost:8080
 
 
