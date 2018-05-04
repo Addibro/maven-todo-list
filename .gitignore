@@ -1,0 +1,7 @@
+/target
+/tomcat*
+/tests
+
+/.idea
+/.settings
+/.vscode
