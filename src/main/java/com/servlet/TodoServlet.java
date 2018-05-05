@@ -42,7 +42,7 @@ public class TodoServlet extends HttpServlet {
         ObjectId idTodo = new ObjectId(req.getParameter("idTodo"));
         Todo todo = getTodos.getTodo(idTodo, "todos");
         String name = req.getParameter("name");
-        ObjectId id = getTodos.doneTodo(todo);
+        ObjectId id = getTodos.handleDoneTodo(todo);
         if (id != null) {
             String message = name + ": Done!";
             req.setAttribute("message", message);
@@ -87,7 +87,6 @@ public class TodoServlet extends HttpServlet {
         req.setAttribute("idTodo", idTodo);
         String message = name + " has been successfully been created";
         req.setAttribute("message", message);
-        System.out.println("Servlet: addTodo() - " + todoList);
         forwardListTodos(req, resp, todoList, todoHistory);
     }
 

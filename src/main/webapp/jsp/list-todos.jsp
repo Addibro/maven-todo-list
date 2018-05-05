@@ -8,7 +8,11 @@
 
     <body>
         <div class="container">
-            <h2>Todos</h2>
+            <div class="container">
+                <br>
+                <h2>Todos</h2>
+                <br>
+            </div>
 
             <!-- Search -->
             <form action="/todo" method="get" id="searchTodoForm" role="form">
@@ -118,8 +122,8 @@
                                 <td>Name</td>
                                 <td>Category</td>
                                 <td>Due Date</td>
-                                <td>Turn in Link</td>
-                                <td>Remove</td>
+                                <td align="center">Turn in Link</td>
+                                <td align="center">Remove</td>
                             </tr>
                             </thead>
                             <c:forEach var="todo" items="${todoHistory}">
@@ -131,10 +135,10 @@
                                     <td>${todo.name}</td>
                                     <td>${todo.category}</td>
                                     <td>${todo.dueDate}</td>
-                                    <td><a href="${todo.turninLink}" target="_blank">
+                                    <td align="center"><a href="${todo.turninLink}" target="_blank">
                                         <span class="fas fa-external-link-alt"></span>
                                     </a></td>
-                                    <td>
+                                    <td align="center">
                                         <a href="#" id="remove"
                                            onclick="document.getElementById('idTodo').value='${todo.id}';
                                                    document.getElementById('action').value='remove';

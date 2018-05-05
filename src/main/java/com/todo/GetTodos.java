@@ -69,7 +69,7 @@ public class GetTodos {
     /**
      * Done
      */
-    public ObjectId doneTodo(Todo todo) {
+    public ObjectId handleDoneTodo(Todo todo) {
         return DBHelper.doneTodo(todo);
     }
 
