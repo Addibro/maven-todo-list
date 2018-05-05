@@ -48,8 +48,8 @@
                                     <td>Name</td>
                                     <td>Category</td>
                                     <td>Due Date</td>
-                                    <td>Turn in Link</td>
-                                    <td>Done</td>
+                                    <td align="center">Turn in Link</td>
+                                    <td align="center">Done</td>
                                 </tr>
                             </thead>
                             <c:forEach var="todo" items="${todoList}">
@@ -66,10 +66,10 @@
                                     <td>${todo.name}</td>
                                     <td>${todo.category}</td>
                                     <td>${todo.dueDate}</td>
-                                    <td><a href="${todo.turninLink}" target="_blank">
+                                    <td align="center"><a href="${todo.turninLink}" target="_blank">
                                         <span class="fas fa-external-link-alt"></span>
                                     </a></td>
-                                    <td>
+                                    <td align="center">
                                         <a href="#" id="done"
                                             onclick="document.getElementById('idTodo').value='${todo.id}';
                                                      document.getElementById('action').value='done';
