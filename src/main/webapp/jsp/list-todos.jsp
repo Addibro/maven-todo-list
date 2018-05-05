@@ -49,6 +49,7 @@
                                     <td>Category</td>
                                     <td>Due Date</td>
                                     <td>Turn in Link</td>
+                                    <td>Done</td>
                                 </tr>
                             </thead>
                             <c:forEach var="todo" items="${todoList}">
@@ -69,12 +70,12 @@
                                         <span class="fas fa-external-link-alt"></span>
                                     </a></td>
                                     <td>
-                                        <a href="#" id="remove"
+                                        <a href="#" id="done"
                                             onclick="document.getElementById('idTodo').value='${todo.id}';
-                                                     document.getElementById('action').value='remove';
+                                                     document.getElementById('action').value='done';
                                                      document.getElementById('name').value='${todo.name}';
                                                      document.getElementById('todoForm').submit();">
-                                            <span class="fas fa-trash"/>
+                                            <span class="far fa-check-circle"/>
                                         </a>
                                     </td>
                                 </tr>
@@ -96,6 +97,65 @@
                     <span class="fa fa-plus"></span> New Todo
                 </button>
             </form>
+            <br>
+            <br>
+            <h3>Todo History</h3>
+            <c:if test="${not empty messageHistory}">
+                <div class="alert alert-success col-5">
+                        ${messageHistory}
+                </div>
+            </c:if>
+            <form action="/todo" method="post" id="todoForm" role="form">
+                <!-- These inputs are later used in the remove action (getElementById)-->
+                <input type="hidden" id="idTodo" name="idTodo"/>
+                <input type="hidden" id="action" name="action"/>
+                <input type="hidden" id="name" name="name">
+                <c:choose>
+                    <c:when test="${not empty todoHistory}">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Category</td>
+                                <td>Due Date</td>
+                                <td>Turn in Link</td>
+                                <td>Remove</td>
+                            </tr>
+                            </thead>
+                            <c:forEach var="todo" items="${todoHistory}">
+                                <c:set var="classSuccess" value=""/>
+                                <c:if test="${idTodo == todo.id}">
+                                    <c:set var="classSuccess" value="info"/>
+                                </c:if>
+                                <tr class="${classSuccess}">
+                                    <td>${todo.name}</td>
+                                    <td>${todo.category}</td>
+                                    <td>${todo.dueDate}</td>
+                                    <td><a href="${todo.turninLink}" target="_blank">
+                                        <span class="fas fa-external-link-alt"></span>
+                                    </a></td>
+                                    <td>
+                                        <a href="#" id="remove"
+                                           onclick="document.getElementById('idTodo').value='${todo.id}';
+                                                   document.getElementById('action').value='remove';
+                                                   document.getElementById('name').value='${todo.name}';
+                                                   document.getElementById('todoForm').submit();">
+                                            <span class="fas fa-trash"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <br>
+                        <div class="alert alert-info col-5">
+                            No todo history
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </form>
+
         </div>
     </body>
 </html>

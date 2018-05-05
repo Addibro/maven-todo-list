@@ -1,4 +1,4 @@
-# maven-todo-list :info:
+# maven-todo-list
 
 1. start mongodg:
 `mongod`

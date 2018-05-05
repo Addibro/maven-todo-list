@@ -32,8 +32,27 @@ public class TodoServlet extends HttpServlet {
             case "edit":
                 editTodo(request, response);
                 break;
+            case "done":
+                doneTodo(request, response);
+                break;
         }
     }
+
+    private void doneTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectId idTodo = new ObjectId(req.getParameter("idTodo"));
+        Todo todo = getTodos.getTodo(idTodo, "todos");
+        String name = req.getParameter("name");
+        ObjectId id = getTodos.doneTodo(todo);
+        if (id != null) {
+            String message = name + ": Done!";
+            req.setAttribute("message", message);
+            req.setAttribute("idTodo", id);
+        }
+        List<Todo> todoList = getTodos.getAllTodos();
+        List<Todo> todoHistory = getTodos.getTodoHistory();
+        forwardListTodos(req, resp, todoList, todoHistory);
+    }
+
 
     private void editTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         ObjectId idTodo = new ObjectId(req.getParameter("idTodo"));
@@ -44,12 +63,13 @@ public class TodoServlet extends HttpServlet {
         Todo todo = new Todo(name, category, dueDate, turninLink);
         boolean confirm = getTodos.updateTodo(idTodo, todo);
         if (confirm) {
-            String message = "Todo was updated";
-            req.setAttribute("message", message);
+            String historyMessage = "Todo was updated";
+            req.setAttribute("message", historyMessage);
         }
         req.setAttribute("idTodo", idTodo);
         List<Todo> todoList = getTodos.getAllTodos();
-        forwardListTodos(req, resp, todoList);
+        List<Todo> todoHistory = getTodos.getTodoHistory();
+        forwardListTodos(req, resp, todoList, todoHistory);
     }
 
     private void addTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -63,31 +83,33 @@ public class TodoServlet extends HttpServlet {
             System.out.println("idTodo is null");
         }
         List<Todo> todoList = getTodos.getAllTodos();
+        List<Todo> todoHistory = getTodos.getTodoHistory();
         req.setAttribute("idTodo", idTodo);
         String message = name + " has been successfully been created";
         req.setAttribute("message", message);
         System.out.println("Servlet: addTodo() - " + todoList);
-        forwardListTodos(req, resp, todoList);
+        forwardListTodos(req, resp, todoList, todoHistory);
     }
 
     private void removeTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectId idTodo = new ObjectId(req.getParameter("idTodo"));
         String name = req.getParameter("name");
         boolean confirm = getTodos.removeTodo(idTodo);
-        String message;
         if (confirm) {
-            message = name + " was removed";
-            req.setAttribute("message", message);
+            String messageHistory = name + " was removed";
+            req.setAttribute("messageHistory", messageHistory);
         }
+        List<Todo> todoHistory = getTodos.getTodoHistory();
         List<Todo> todoList = getTodos.getAllTodos();
-        forwardListTodos(req, resp, todoList);
+        forwardListTodos(req, resp, todoList, todoHistory);
     }
 
     private void searchTodoByName(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
         String todoName = request.getParameter("todoName");
         List<Todo> result = getTodos.searchTodoByName(todoName);
-        forwardListTodos(request, response, result);
+        List<Todo> todoHistory = getTodos.getTodoHistory();
+        forwardListTodos(request, response, result, todoHistory);
     }
 
     private void searchTodoById(HttpServletRequest request, HttpServletResponse response)
@@ -127,16 +149,18 @@ public class TodoServlet extends HttpServlet {
             }
         } else {
             List<Todo> todoList = getTodos.getAllTodos();
-            forwardListTodos(request, response, todoList);
+            List<Todo> todoHistory = getTodos.getTodoHistory();
+            forwardListTodos(request, response, todoList, todoHistory);
         }
 
     }
 
-    private void forwardListTodos(HttpServletRequest request, HttpServletResponse response, List<Todo> todoList)
+    private void forwardListTodos(HttpServletRequest request, HttpServletResponse response, List<Todo> todoList, List<Todo> todoHistory)
             throws  ServletException, IOException {
         String nextJSP = "/jsp/list-todos.jsp"; // resource
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
         request.setAttribute("todoList", todoList);
+        request.setAttribute("todoHistory", todoHistory);
         dispatcher.forward(request, response);
     }
 }

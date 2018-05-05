@@ -11,12 +11,17 @@ import java.util.stream.Collectors;
 public class GetTodos {
 
     private List<Todo> todos;
+    private List<Todo> todoHistory;
 
     /**
      * Get all todos
      */
     public List<Todo> getAllTodos() throws UnknownHostException {
-        return todos = DBHelper.qetAllFromDB();
+        return todos = DBHelper.getTodos("todos");
+    }
+
+    public List<Todo> getTodoHistory() throws UnknownHostException {
+        return todoHistory = DBHelper.getTodos("todoHistory");
     }
 
     /**
@@ -58,7 +63,21 @@ public class GetTodos {
      * Remove todo
      */
     public boolean removeTodo(ObjectId idTodo) {
-        return DBHelper.removeTodo(idTodo);
+        return DBHelper.removeTodoFromHistory(idTodo);
+    }
+
+    /**
+     * Done
+     */
+    public ObjectId doneTodo(Todo todo) {
+        return DBHelper.doneTodo(todo);
+    }
+
+    /**
+     * Get
+     */
+    public Todo getTodo(ObjectId id, String collectionName) {
+        return DBHelper.getOneTodo(id, collectionName);
     }
 
     /**

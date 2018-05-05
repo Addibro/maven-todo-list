@@ -19,34 +19,51 @@ public class DBHelper {
     private static MongoClient mongoClient;
     private static Jongo jongo;
     private static MongoCollection todos;
+    private static MongoCollection todoHistory;
+
+    static {
+        try {
+            connect();
+        } catch (UnknownHostException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     private DBHelper() {}
 
-    static List<Todo> qetAllFromDB() throws UnknownHostException {
-        connect();
-        Iterable<Todo> todoList = jongo.getCollection("todos")
+    static List<Todo> getTodos(String collectionName) {
+        Iterable<Todo> todoList = jongo.getCollection(collectionName)
                 .find().as(Todo.class);
         return StreamSupport.stream(todoList.spliterator(), false)
                 .collect(Collectors.toList());
     }
 
     static ObjectId addToDb(Todo todo) {
-        System.out.println(todo);
-        todos.save(todo);
-        Todo returnTodo = todos.findOne(todo.getId()).as(Todo.class);
-        return returnTodo.getId();
+        return (ObjectId) todos.save(todo).getUpsertedId();
     }
 
-    static boolean removeTodo(ObjectId idTodo) {
-        todos.remove(idTodo);
-        Todo removed = todos.findOne(idTodo).as(Todo.class);
-        return removed == null;
+    static boolean removeTodoFromHistory(ObjectId idTodo) {
+        todoHistory.remove(idTodo);
+        Todo todo = todoHistory.findOne(idTodo).as(Todo.class);
+        return todo == null;
+    }
+
+    static ObjectId doneTodo(Todo todo) {
+        // save in history
+        ObjectId saved = (ObjectId) todoHistory.save(todo).getUpsertedId();
+        // remove from todos
+        todos.remove(todo.getId());
+        return saved;
     }
 
     static boolean updateTodo(ObjectId idTodo, Todo todo) {
         return todos.update(idTodo)
                 .with(todo)
                 .isUpdateOfExisting();
+    }
+
+    static Todo getOneTodo(ObjectId id, String collectionName) {
+        return jongo.getCollection(collectionName).findOne(id).as(Todo.class);
     }
 
     static boolean closeDB() {
@@ -63,6 +80,7 @@ public class DBHelper {
             DB db = mongoClient.getDB("todos");
             jongo = new Jongo(db);
             todos = jongo.getCollection("todos");
+            todoHistory = jongo.getCollection("todoHistory");
         }
     }
 }
