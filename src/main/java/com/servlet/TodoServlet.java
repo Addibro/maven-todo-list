@@ -20,7 +20,8 @@ public class TodoServlet extends HttpServlet {
 
     GetTodos getTodos = new GetTodos();
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
         switch (action) {
             case "add":
@@ -38,7 +39,8 @@ public class TodoServlet extends HttpServlet {
         }
     }
 
-    private void doneTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void doneTodo(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         ObjectId idTodo = new ObjectId(req.getParameter("idTodo"));
         Todo todo = getTodos.getTodo(idTodo, "todos");
         String name = req.getParameter("name");
@@ -54,7 +56,8 @@ public class TodoServlet extends HttpServlet {
     }
 
 
-    private void editTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    private void editTodo(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException{
         ObjectId idTodo = new ObjectId(req.getParameter("idTodo"));
         String name = req.getParameter("name");
         String category = req.getParameter("category");
@@ -72,7 +75,8 @@ public class TodoServlet extends HttpServlet {
         forwardListTodos(req, resp, todoList, todoHistory);
     }
 
-    private void addTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void addTodo(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         String name = req.getParameter("name");
         String category = req.getParameter("category");
         String dueDate = req.getParameter("dueDate");
@@ -90,7 +94,8 @@ public class TodoServlet extends HttpServlet {
         forwardListTodos(req, resp, todoList, todoHistory);
     }
 
-    private void removeTodo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void removeTodo(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         ObjectId idTodo = new ObjectId(req.getParameter("idTodo"));
         String name = req.getParameter("name");
         boolean confirm = getTodos.removeTodo(idTodo);
